@@ -1,6 +1,7 @@
-export async function getMarketCategory(idea: string) {
+import { AnalysisResult } from "@/types/analysis";
 
-  const response = await fetch("http://localhost:8000/market-category", {
+export async function analyzeIdea(idea: string): Promise<AnalysisResult> {
+  const response = await fetch("/api/analyze", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -9,7 +10,7 @@ export async function getMarketCategory(idea: string) {
   });
 
   if (!response.ok) {
-    throw new Error("ML service error");
+    throw new Error("Analysis failed");
   }
 
   return response.json();

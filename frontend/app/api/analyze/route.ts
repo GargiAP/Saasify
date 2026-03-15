@@ -1,13 +1,7 @@
 import { NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const genAI = new GoogleGenerativeAI(
-  process.env.GEMINI_API_KEY as string
-);
 
 export async function POST(req: Request) {
   try {
-
     const { idea } = await req.json();
 
     if (!idea || idea.trim().length === 0) {
@@ -17,90 +11,51 @@ export async function POST(req: Request) {
       );
     }
 
-    const prompt = `
-You are a startup analyst.
-
-Your task is to INTERPRET the idea clearly.
-
-Do NOT validate or judge the idea.
-Do NOT suggest improvements.
-
-Return ONLY valid JSON in this format:
-
-{
-  "problem_statement": "",
-  "solution_summary": "",
-  "target_user": "",
-  "assumptions": []
-}
-
-Startup idea:
-"${idea}"
-`;
-
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
-    });
-
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
-
-    const cleanedText = text
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
-
-    let interpretation;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 120000); // 2 min timeout
 
     try {
-      interpretation = JSON.parse(cleanedText);
-    } catch (err) {
-      console.error("Gemini parsing error:", cleanedText);
+      const mlResponse = await fetch("http://127.0.0.1:8000/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idea }),
+        signal: controller.signal,
+      });
 
-      return NextResponse.json(
-        { error: "AI response parsing failed" },
-        { status: 500 }
-      );
-    }
+      clearTimeout(timeout);
 
-    let mlData = null;
-
-    try {
-
-      const mlResponse = await fetch(
-        "http://127.0.0.1:8000/market-category",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ idea }),
-        }
-      );
-
-      if (mlResponse.ok) {
-        mlData = await mlResponse.json();
+      if (!mlResponse.ok) {
+        const error = await mlResponse.text();
+        console.error("ML service error:", error);
+        return NextResponse.json(
+          { error: "ML service failed" },
+          { status: 500 }
+        );
       }
 
-    } catch (err) {
-      console.error("ML service error:", err);
+      const data = await mlResponse.json();
+      return NextResponse.json(data);
+
+    } catch (fetchErr: any) {
+      clearTimeout(timeout);
+      if (fetchErr.name === "AbortError") {
+        return NextResponse.json(
+          { error: "Analysis timed out. Please try again." },
+          { status: 504 }
+        );
+      }
+      throw fetchErr;
     }
 
-
-    return NextResponse.json({
-      success: true,
-      interpretation,
-      market_category: mlData?.category ?? null,
-      similarity_score: mlData?.similarity ?? null,
-    });
-
   } catch (err) {
-
     console.error("API error:", err);
-
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
     );
   }
 }
+
+export const maxDuration = 120;

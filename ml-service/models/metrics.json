@@ -1,0 +1,25 @@
+{
+  "model_type": "XGBoost Regressor",
+  "approach": "formula-derived targets with SHAP explainability",
+  "r2_score": 0.9411,
+  "mae": 0.0084,
+  "mae_100_scale": 0.84,
+  "features": [
+    "competition_density",
+    "novelty_score",
+    "market_growth",
+    "pain_severity",
+    "monetization_signal",
+    "description_quality",
+    "topic_diversity"
+  ],
+  "weights": {
+    "pain_severity": 0.25,
+    "market_growth": 0.2,
+    "monetization_signal": 0.2,
+    "description_quality": 0.15,
+    "novelty_score": 0.1,
+    "topic_diversity": 0.05,
+    "competition_density": -0.15
+  }
+}
