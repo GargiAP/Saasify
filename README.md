@@ -180,16 +180,3 @@ Groq's inference is 10x faster than OpenAI at comparable quality for structured 
 
 **Why FAISS for similarity search?**
 FAISS scales to millions of vectors with sub-millisecond search. Even at 352 products it is the right tool — no code changes needed to scale to 500,000 products.
-
----
-
-## Resume Description
-
-Built an ML-powered startup idea evaluation system: scraped 352 real SaaS products via Product Hunt GraphQL API, engineered 7 features from raw text, trained XGBoost regression model (R²=0.94) with SHAP explainability, and integrated Groq Llama 3 for structured idea analysis and report generation. Deployed as FastAPI + Next.js application on Render + Vercel with CI/CD via GitHub.
-
----
-
-## Author
-
-**Gargi Pratapwar**
-[GitHub](https://github.com/GargiAP) • [LinkedIn](your-linkedin-here)
