@@ -15,7 +15,8 @@ export async function POST(req: Request) {
     const timeout = setTimeout(() => controller.abort(), 120000); // 2 min timeout
 
     try {
-      const mlResponse = await fetch("http://127.0.0.1:8000/analyze", {
+      const mlUrl = process.env.NEXT_PUBLIC_ML_SERVICE_URL || "http://127.0.0.1:8000";
+      const mlResponse = await fetch(`${mlUrl}/analyze`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
