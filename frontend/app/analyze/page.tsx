@@ -1,11 +1,12 @@
 'use client';
 
+import { Suspense } from "react";
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { analyzeIdea } from "@/services/mlService";
 import { AnalysisResult } from "@/types/analysis";
 
-export default function AnalyzePage() {
+function AnalyzePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const idea = searchParams.get("idea");
@@ -69,7 +70,6 @@ export default function AnalyzePage() {
     <main className="min-h-screen bg-gradient-to-br from-[#020617] to-[#03162a] text-white px-6 py-10">
       <div className="max-w-5xl mx-auto space-y-8">
 
-        {/* Header */}
         <div className="flex items-center justify-between">
           <button
             onClick={() => router.push("/")}
@@ -82,7 +82,6 @@ export default function AnalyzePage() {
           </span>
         </div>
 
-        {/* Title */}
         <div>
           <h1 className="text-2xl font-bold text-white">
             {result.idea_info.cleaned_idea}
@@ -99,7 +98,6 @@ export default function AnalyzePage() {
           </div>
         </div>
 
-        {/* Top stats row */}
         <div className="grid grid-cols-3 gap-4">
           <div className="bg-white/5 border border-white/10 rounded-xl p-5 text-center">
             <p className="text-xs text-white/40 mb-1">Viability score</p>
@@ -122,7 +120,6 @@ export default function AnalyzePage() {
           </div>
         </div>
 
-        {/* Idea info */}
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
           <h2 className="text-cyan-400 font-semibold">Idea breakdown</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -141,7 +138,6 @@ export default function AnalyzePage() {
           </div>
         </div>
 
-        {/* Similar products */}
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
           <h2 className="text-cyan-400 font-semibold mb-4">
             Similar products found
@@ -165,7 +161,6 @@ export default function AnalyzePage() {
           </div>
         </div>
 
-        {/* Gap analysis */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
             <h2 className="text-cyan-400 font-semibold mb-4">Market gaps</h2>
@@ -190,7 +185,6 @@ export default function AnalyzePage() {
           </div>
         </div>
 
-        {/* Viability score breakdown */}
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
           <h2 className="text-cyan-400 font-semibold mb-4">
             Score breakdown
@@ -220,7 +214,6 @@ export default function AnalyzePage() {
           </div>
         </div>
 
-        {/* LLM Report */}
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
           <h2 className="text-cyan-400 font-semibold mb-4">
             Full analysis report
@@ -255,5 +248,18 @@ export default function AnalyzePage() {
 
       </div>
     </main>
+  );
+}
+
+export default function AnalyzePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#020617] text-white flex flex-col items-center justify-center gap-4">
+        <div className="h-10 w-10 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin" />
+        <p className="text-white/60 text-sm">Loading...</p>
+      </div>
+    }>
+      <AnalyzePageContent />
+    </Suspense>
   );
 }
