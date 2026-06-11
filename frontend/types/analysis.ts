@@ -1,42 +1,84 @@
-export interface IdeaInfo {
-  cleaned_idea: string
-  problem_being_solved: string
-  target_audience: string
-  core_value_proposition: string
-  market_category: string
-  keywords: string[]
+export interface IdeaMeta {
+  industry: string
+  subcategory: string
+  target_customer: string
+  business_model: string
+  pain_point: string
+  solution: string
 }
 
-export interface SimilarProduct {
-  name: string
-  tagline: string
-  similarity: number
-}
-
-export interface ShapItem {
-  feature: string
-  value: number
-}
-
-export interface GapAnalysis {
-  gaps: string[]
-  opportunities: string[]
-  crowding_level: string
-  competitor_topics: string[]
-}
-
-export interface Viability {
+export interface Competition {
   score: number
-  features: Record<string, number>
-  shap_breakdown: ShapItem[]
+  level: string
+}
+
+export interface MarketIntelligence {
+  market_segment: string
+  cluster_id: number
+  cluster_size: number
+
+  competition: Competition
+
+  differentiation_score: number
+
+  opportunity_score: number
+}
+
+export interface Competitor {
+  startup_id: string
+
+  name: string
+
+  industry: string
+
+  subcategory: string
+
+  target_customer: string
+
+  business_model: string
+
+  pain_point: string
+
+  solution: string
+
+  score: number
+
+  reasons: string[]
+
+  match_reasons: string[]
+}
+export interface MarketGap {
+  market_saturation: string
+
+  opportunities: string[]
+
+  missing_features: string[]
+
+  risks: string[]
+
+  threats: string[]
+}
+
+export interface Recommendations {
+  positioning: string[]
+
+  feature_suggestions: string[]
+
+  customer_segments: string[]
+
+  monetization: string[]
 }
 
 export interface AnalysisResult {
-  success: boolean
   idea: string
-  idea_info: IdeaInfo
-  similar_products: SimilarProduct[]
-  gap_analysis: GapAnalysis
-  viability: Viability
-  report: string
+
+  idea_meta: IdeaMeta
+
+  market_intelligence: MarketIntelligence
+
+  competitors: Competitor[]
+
+  market_gap: MarketGap
+
+  recommendations: Recommendations
 }

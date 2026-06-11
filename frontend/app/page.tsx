@@ -4,89 +4,87 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
-
   const [idea, setIdea] = useState('');
   const router = useRouter();
 
   const handleSubmit = () => {
-
-    console.log("Analyze clicked");
-
-    if (!idea.trim()) {
-      alert('Please describe your idea');
-      return;
-    }
-
-    const encodedIdea = encodeURIComponent(idea);
-
-    router.push(`/analyze?idea=${encodedIdea}`);
+    if (!idea.trim()) return;
+    router.push(`/analyze?idea=${encodeURIComponent(idea)}`);
   };
 
+  const features = [
+    { icon: "⚔️", label: "Competition Score", desc: "How saturated is your market" },
+    { icon: "🎯", label: "Differentiation", desc: "How unique your angle is" },
+    { icon: "🚀", label: "Opportunity Score", desc: "Overall market potential" },
+    { icon: "🏢", label: "Top Competitors", desc: "Who you'll be up against" },
+    { icon: "🗺️", label: "Market Gaps", desc: "Where incumbents fall short" },
+    { icon: "📋", label: "Next Steps", desc: "What to build and prioritize" },
+  ];
+
   return (
-    <main className="relative min-h-screen bg-gradient-to-br from-[#020617] via-[#020617] to-[#03162a] text-white overflow-hidden">
+    <main className="min-h-screen bg-[#09090f] text-white flex flex-col">
 
-      {/* Glow background */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500/20 blur-[160px]" />
-      </div>
+      {/* Subtle top glow */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-violet-600/10 blur-[100px] pointer-events-none" />
 
-      {/* Navbar */}
-      <nav className="flex items-center justify-between px-6 py-5 max-w-7xl mx-auto">
-
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-cyan-400 flex items-center justify-center font-bold text-black">
-            ✦
-          </div>
-          <span className="text-lg font-semibold">Saasify</span>
+      {/* Nav */}
+      <nav className="relative z-10 flex items-center justify-between px-8 py-5 border-b border-white/[0.06]">
+        <div className="flex items-center gap-2.5">
+          <div className="h-7 w-7 rounded-lg bg-violet-600 flex items-center justify-center text-white text-xs font-bold">✦</div>
+          <span className="font-semibold text-white">Saasify</span>
         </div>
-
-        <span className="text-sm text-white/50">
-          v1.0 — Research & Validation
-        </span>
-
+        <span className="text-xs text-white/30 tracking-widest uppercase hidden sm:block">Startup Intelligence</span>
       </nav>
 
       {/* Hero */}
-      <section className="flex flex-col items-center text-center px-6 mt-24">
+      <section className="relative z-10 flex flex-col items-center text-center px-6 pt-24 pb-16">
 
-        <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1 text-sm text-cyan-300">
-          ✨ Research before you build
-        </span>
+        <div className="inline-flex items-center gap-2 bg-violet-500/10 rounded-full px-4 py-1.5 mb-8">
+          <span className="h-1.5 w-1.5 rounded-full bg-violet-400 animate-pulse" />
+          <span className="text-xs text-violet-300 font-medium">Research before you build</span>
+        </div>
 
-        <h1 className="max-w-4xl text-4xl md:text-6xl font-bold leading-tight">
+        <h1 className="max-w-3xl text-5xl md:text-6xl font-bold leading-tight text-white">
           Turn your idea into <br />
-          <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
             market clarity
           </span>
         </h1>
 
-        <p className="mt-6 max-w-2xl text-white/60">
-          Enter your SaaS idea and get clarity on target users, assumptions,
-          competition, gaps, and viability.
+        <p className="mt-5 max-w-lg text-[15px] text-white/50 leading-relaxed">
+          Get an instant, founder-focused market intelligence report. Understand your competition, find your gaps, and know exactly what to build first.
         </p>
 
-        {/* Input */}
-        <div className="mt-10 flex w-full max-w-2xl items-center gap-3 rounded-xl bg-white/5 p-3 backdrop-blur border border-white/10">
+        {/* Input box */}
+        <div className="mt-10 w-full max-w-2xl">
+          <div className="flex gap-2 bg-white/[0.06] rounded-xl p-1.5">
+            <input
+              type="text"
+              placeholder="e.g. AI tool that helps solo founders write cold emails..."
+              value={idea}
+              onChange={(e) => setIdea(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(); }}
+              className="flex-1 bg-transparent px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none"
+            />
+            <button
+              onClick={handleSubmit}
+              disabled={!idea.trim()}
+              className="shrink-0 bg-violet-600 hover:bg-violet-500 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-semibold px-6 py-3 rounded-lg transition-colors"
+            >
+              Analyze →
+            </button>
+          </div>
+        </div>
 
-          <input
-            type="text"
-            placeholder="Describe your SaaS idea..."
-            value={idea}
-            onChange={(e) => setIdea(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleSubmit();
-            }}
-            className="flex-1 bg-transparent px-3 py-3 text-sm outline-none placeholder:text-white/40"
-          />
-
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyan-400 to-blue-500 px-6 py-3 text-sm font-semibold text-black hover:opacity-90 transition"
-          >
-            Analyze →
-          </button>
-
+        {/* Feature Grid */}
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-3 gap-3 max-w-2xl w-full">
+          {features.map((f) => (
+            <div key={f.label} className="bg-white/[0.04] rounded-xl p-4 text-left">
+              <div className="text-xl mb-2">{f.icon}</div>
+              <p className="text-sm font-medium text-white/90">{f.label}</p>
+              <p className="text-xs text-white/40 mt-0.5">{f.desc}</p>
+            </div>
+          ))}
         </div>
 
       </section>
