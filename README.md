@@ -147,7 +147,3 @@ Instead of generating more startup ideas, Saasify focuses on evaluating whether 
 ## 🔗 Live Demo
 
 https://saasify-umber.vercel.app/
-
----
-
-Built with ❤️ for founders and builders.
